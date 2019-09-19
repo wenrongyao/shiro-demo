@@ -5,18 +5,25 @@
     <title>login</title>
 
 <#include  "./common/common.ftl">
+
+    <style>
+        .form {
+            display: flex;
+            justify-content: center;
+        }
+    </style>
 </head>
 
 <body>
-<form action="user/login" method="post">
-    username: <input type="text" id="userName" name="userName">
-    <br><br>
-    password: <input type="password" id="password" name="password">
-    <br><br>
-    <input type="button" id="submit" value="submit">
-</form>
-
-
+<div class="form">
+    <form action="user/login" method="post">
+        username: <input type="text" id="userName" name="userName">
+        <br><br>
+        password: <input type="password" id="password" name="password">
+        <br><br>
+        <input type="button" id="submit" value="submit">
+    </form>
+</div>
 <script>
     $(function () {
         $("#submit").click(function () {

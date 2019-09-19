@@ -1,16 +1,14 @@
 package com.honor;
 
-import com.alibaba.druid.pool.DruidDataSource;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.mgt.DefaultSecurityManager;
-import org.apache.shiro.realm.jdbc.JdbcRealm;
+import org.apache.shiro.realm.Realm;
+import org.apache.shiro.realm.text.IniRealm;
 import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.Subject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import javax.sql.DataSource;
 
 public class Tutorial {
 
@@ -18,17 +16,8 @@ public class Tutorial {
 
     public static void main(String[] args) {
         log.info("My First Apache Shiro Application");
-
-        // 用来保存用户角色权限信息
         DefaultSecurityManager securityManager = new DefaultSecurityManager();
-        //Realm realm = new IniRealm("classpath:shiro.ini");
-        JdbcRealm realm = new JdbcRealm();
-        DruidDataSource dataSource = new DruidDataSource();
-        dataSource.setDriverClassName("com.mysql.jdbc.Driver");
-        dataSource.setUrl("jdbc:mysql://localhost:3306/shiro");
-        dataSource.setUsername("root");
-        dataSource.setPassword("root");
-        realm.setDataSource(dataSource);
+        Realm realm = new IniRealm("classpath:shiro.ini");
         securityManager.setRealm(realm);
         SecurityUtils.setSecurityManager(securityManager);
 

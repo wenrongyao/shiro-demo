@@ -27,12 +27,12 @@ public class ShiroConfig {
     /**
      * ShiroFilterFactoryBean 处理拦截资源文件问题。
      * 拦截器如下
-     * anon ==> 不用登录资源
-     * anonc ==> 需要登录资源
+     * anon ==> 不用认证资源
+     * anonc ==> 需要认证的资源
      * logout ==>　退出拦截器
      * user ==> subject.remberme()
-     * role ==> 拥有角色
-     * permission ==> 拥有权限
+     * roles ==> 拥有角色
+     * perms ==> 拥有权限
      *
      * @param securityManager
      * @return
@@ -43,25 +43,32 @@ public class ShiroConfig {
         shiroFilterFactoryBean.setSecurityManager(securityManager);
         //配置默认未登录跳转页面
         shiroFilterFactoryBean.setLoginUrl("/user/login");
-        //配置未授权跳转页面
-        //shiroFilterFactoryBean.setUnauthorizedUrl("/user/unauthorized");
+        // 配置未授权跳转页面,filterChainDefinitionMap.put("/user/login2", "perms[2]")
+        // 注解的未授权直接抛异常，由统一异常处理
+        // shiroFilterFactoryBean.setUnauthorizedUrl("/user/unauthorized");
 
         // 拦截器.
         Map<String, String> filterChainDefinitionMap = new LinkedHashMap<>();
-        // 配置记住我或认证通过可以访问的地址(配置不会被拦截的链接 顺序判断)
+        // 配置不许认证的资源
         filterChainDefinitionMap.put("/static/**", "anon");
         filterChainDefinitionMap.put("/user/login", "anon");
         filterChainDefinitionMap.put("/user/tologin", "anon");
+        // filterChainDefinitionMap.put("/user/login2", "perms[2]");
 
         // 配置退出过滤器,其中的具体的退出代码Shiro已经替我们实现了
         filterChainDefinitionMap.put("/user/loginout", "logout");
 
-        // 出了上面所有，其它都需要授权，匹配方式，第一次匹配优先
+        // 除了上面所有，其它都需要授权，匹配方式，第一次匹配优先
         filterChainDefinitionMap.put("/**", "authc");
         shiroFilterFactoryBean.setFilterChainDefinitionMap(filterChainDefinitionMap);
         return shiroFilterFactoryBean;
     }
 
+    /**
+     * shiro的大管家，整合资源
+     *
+     * @return
+     */
     @Bean
     public SecurityManager securityManager() {
         DefaultWebSecurityManager securityManager = new DefaultWebSecurityManager();
@@ -132,6 +139,4 @@ public class ShiroConfig {
         cookieRememberMeManager.setCookie(rememberMeCookie());
         return cookieRememberMeManager;
     }
-
-
 }

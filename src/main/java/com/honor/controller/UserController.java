@@ -36,6 +36,11 @@ public class UserController {
     @Autowired
     private ISysUserService sysUserService;
 
+    /**
+     * 主页面
+     *
+     * @return
+     */
     @RequestMapping("/index")
     public String index() {
         return "index";
@@ -65,6 +70,7 @@ public class UserController {
         if (StringUtils.isNotBlank(userName) && StringUtils.isNotBlank(password)) {
             Subject subject = SecurityUtils.getSubject();
             UsernamePasswordToken token = new UsernamePasswordToken(userName, password);
+            token.setRememberMe(true);
             try {
                 subject.login(token);
             } catch (AuthenticationException e) {
